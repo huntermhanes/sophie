@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Question For You...</title>
+    <!-- Importing a cute font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            overflow: hidden; /* Prevents scrolling when the button gets huge */
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 90%;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #d81b60;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            line-height: 1.4;
+        }
+
+        .buttons-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            transition: all 0.3s ease;
+        }
+
+        .yes-btn {
+            background-color: #e91e63;
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+        }
+
+        .yes-btn:hover {
+            background-color: #c2185b;
+        }
+
+        .no-btn {
+            background-color: #9e9e9e;
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px 30px;
+        }
+
+        .success-text {
+            font-size: 1.5rem;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #d81b60;
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Step 1: Boyfriend Question -->
+    <div class="container" id="step1-container">
+        <h1>May I be your boyfriend?</h1>
+        <div class="buttons-wrapper">
+            <button id="yes-btn-1" class="yes-btn" onclick="handleYes(1)">Yes</button>
+            <button id="no-btn-1" class="no-btn" onclick="handleNo(1)">No</button>
+        </div>
+    </div>
+
+    <!-- Step 2: Concert Date Question -->
+    <div class="container" id="step2-container" style="display: none;">
+        <h1>Will you join me for our first official date as boyfriend and girlfriend to see Bruno Mars on Wednesday, May 20th?</h1>
+        <div class="buttons-wrapper">
+            <button id="yes-btn-2" class="yes-btn" onclick="handleYes(2)">Yes</button>
+            <button id="no-btn-2" class="no-btn" onclick="handleNo(2)">No</button>
+        </div>
+    </div>
+
+    <!-- Step 3: Celebration View -->
+    <div class="container" id="success-container" style="display: none;">
+        <h1>YAY! ❤️🎉</h1>
+        <p class="success-text">
+            It's official!<br>
+            I can't wait for our first date at the <br>
+            <span class="highlight">Bruno Mars concert!</span>
+        </p>
+    </div>
+
+    <script>
+        // Trackers for each step
+        let state = {
+            1: { noClickCount: 0, yesFontSize: 1.2, yesPaddingV: 15, yesPaddingH: 30, noFontSize: 1.2, noPaddingV: 15, noPaddingH: 30 },
+            2: { noClickCount: 0, yesFontSize: 1.2, yesPaddingV: 15, yesPaddingH: 30, noFontSize: 1.2, noPaddingV: 15, noPaddingH: 30 }
+        };
+
+        const messages = ["Are you sure?", "Really sure?", "Think again!"];
+
+        function handleNo(step) {
+            let s = state[step];
+            s.noClickCount++;
+
+            const yesBtn = document.getElementById(`yes-btn-${step}`);
+            const noBtn = document.getElementById(`no-btn-${step}`);
+
+            if (s.noClickCount >= 3) {
+                // Change the No button into a Yes button
+                noBtn.innerText = "Yes";
+                noBtn.className = "yes-btn"; // Applies all the pink styling
+                noBtn.onclick = function() { handleYes(step); };
+                
+                // Match the size of the giant Yes button
+                noBtn.style.fontSize = yesBtn.style.fontSize;
+                noBtn.style.padding = yesBtn.style.padding;
+            } else {
+                // Change text of No button slightly to be playful
+                noBtn.innerText = messages[s.noClickCount - 1];
+
+                // Make YES bigger
+                s.yesFontSize += 1.5;
+                s.yesPaddingV += 15;
+                s.yesPaddingH += 25;
+                yesBtn.style.fontSize = s.yesFontSize + 'rem';
+                yesBtn.style.padding = s.yesPaddingV + 'px ' + s.yesPaddingH + 'px';
+
+                // Make NO smaller
+                s.noFontSize -= 0.2;
+                s.noPaddingV -= 3;
+                s.noPaddingH -= 5;
+                noBtn.style.fontSize = s.noFontSize + 'rem';
+                noBtn.style.padding = s.noPaddingV + 'px ' + s.noPaddingH + 'px';
+            }
+        }
+
+        function handleYes(step) {
+            if (step === 1) {
+                // Hide step 1, show step 2
+                document.getElementById('step1-container').style.display = 'none';
+                document.getElementById('step2-container').style.display = 'block';
+            } else if (step === 2) {
+                // Hide step 2, show success message
+                document.getElementById('step2-container').style.display = 'none';
+                document.getElementById('success-container').style.display = 'block';
+                // Trigger the confetti!
+                fireConfetti();
+            }
+        }
+
+        function fireConfetti() {
+            const duration = 5 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                
+                // Confetti from left
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#ff0000', '#ff69b4', '#ffffff', '#e91e63']
+                }));
+                // Confetti from right
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#ff0000', '#ff69b4', '#ffffff', '#e91e63']
+                }));
+            }, 250);
+        }
+    </script>
+</body>
+</html>
