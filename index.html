@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Special Question For You...</title>
-    <!-- Importing a cute font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
-    <!-- Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
@@ -17,10 +15,38 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #e0f2f1, #c8e6c9); /* Forest green gradient */
+            background: linear-gradient(135deg, #e0f2f1, #c8e6c9); 
             font-family: 'Nunito', sans-serif;
             text-align: center;
-            overflow: hidden; /* Prevents scrolling when the button gets huge */
+            overflow: hidden; 
+        }
+
+        /* The Animated Moose */
+        .moose-wrapper {
+            position: fixed;
+            bottom: 8%;
+            left: -15%;
+            font-size: 6rem;
+            z-index: 1; /* Stays behind the white box */
+            pointer-events: none; /* So she can't click it */
+            animation: walkAcross 20s linear infinite;
+        }
+
+        .moose-inner {
+            display: inline-block;
+            animation: trot 0.4s infinite alternate ease-in-out;
+        }
+
+        @keyframes walkAcross {
+            0% { left: -15%; transform: scaleX(-1); } /* Face right */
+            49.9% { left: 110%; transform: scaleX(-1); } /* Walk right */
+            50% { left: 110%; transform: scaleX(1); } /* Flip to face left */
+            100% { left: -15%; transform: scaleX(1); } /* Walk left */
+        }
+
+        @keyframes trot {
+            0% { transform: translateY(0) rotate(-5deg); }
+            100% { transform: translateY(-15px) rotate(5deg); }
         }
 
         .container {
@@ -29,9 +55,10 @@
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             max-width: 90%;
+            width: 500px;
             z-index: 10;
             position: relative;
-            min-height: 200px; /* Keeps box size stable while typing */
+            min-height: 200px; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -39,11 +66,11 @@
         }
 
         h1 {
-            color: #1b5e20; /* Dark forest green header */
+            color: #1b5e20; 
             margin-bottom: 30px;
             font-size: 2rem;
             line-height: 1.4;
-            min-height: 60px; /* Keeps space open for the text */
+            min-height: 60px; 
         }
 
         .buttons-wrapper {
@@ -54,12 +81,11 @@
             gap: 20px;
             flex-wrap: wrap;
             min-height: 60px; 
-            opacity: 0; /* Hidden initially until text finishes typing */
+            opacity: 0; 
             pointer-events: none;
-            transition: opacity 1s ease-in; /* Smooth fade in */
+            transition: opacity 1s ease-in; 
         }
 
-        /* Class added via JS to reveal the buttons */
         .show-buttons {
             opacity: 1;
             pointer-events: auto;
@@ -71,7 +97,7 @@
             cursor: pointer;
             font-family: 'Nunito', sans-serif;
             font-weight: 800;
-            transition: all 0.2s ease; /* Faster transition so it darts away quickly */
+            transition: all 0.2s ease; 
         }
 
         .yes-btn {
@@ -108,7 +134,6 @@
             font-size: 1.8rem;
         }
 
-        /* Typewriter Blinking Cursor Effect */
         .typing-cursor::after {
             content: '|';
             color: #1b5e20;
@@ -122,6 +147,11 @@
 </head>
 <body>
 
+    <!-- The Walking Moose -->
+    <div class="moose-wrapper">
+        <div class="moose-inner">🫎</div>
+    </div>
+
     <!-- Step 1: Boyfriend Question -->
     <div class="container" id="step1-container">
         <h1 id="text-step-1"></h1>
@@ -131,39 +161,46 @@
         </div>
     </div>
 
-    <!-- Step 2: Concert Date Question -->
+    <!-- Step 2: The Gym Buddy / Yippee Screen -->
     <div class="container" id="step2-container" style="display: none;">
         <h1 id="text-step-2"></h1>
         <div class="buttons-wrapper" id="btns-2">
-            <button id="yes-btn-2" class="yes-btn" onclick="handleYes(2)">Yes</button>
-            <button id="no-btn-2" class="no-btn" onmouseover="moveButton(this)" ontouchstart="moveButton(this)" onclick="handleNo(2)">No</button>
+            <button id="yippee-btn" class="yes-btn" onclick="handleYes(2)">yippee</button>
         </div>
     </div>
 
-    <!-- Step 3: Celebration View -->
+    <!-- Step 3: Concert Date Question -->
+    <div class="container" id="step3-container" style="display: none;">
+        <h1 id="text-step-3"></h1>
+        <div class="buttons-wrapper" id="btns-3">
+            <button id="yes-btn-3" class="yes-btn" onclick="handleYes(3)">Yes</button>
+            <button id="no-btn-3" class="no-btn" onmouseover="moveButton(this)" ontouchstart="moveButton(this)" onclick="handleNo(3)">No</button>
+        </div>
+    </div>
+
+    <!-- Step 4: Celebration View -->
     <div class="container" id="success-container" style="display: none;">
-        <h1 id="text-step-3-h1"></h1>
-        <p class="success-text" id="text-step-3-p"></p>
+        <h1 id="text-step-4-h1"></h1>
+        <p class="success-text" id="text-step-4-p"></p>
     </div>
 
     <script>
-        // The text strings we want to type out
+        // The text strings
         const string1 = "May I be your boyfriend?";
-        const string2 = "Will you join me for our first official date as boyfriend and girlfriend to see Bruno Mars on Wednesday, May 20th?";
-        const string3H1 = "YAY! ❤️🎉";
-        const string3P = "It's official!<br>I can't wait for our first date at the <br><span class='highlight'>Bruno Mars concert!</span>";
+        const string2 = "Yippee..heres to more bloody noses, endless energy drinks, and an official gym buddy";
+        const string3 = "Will you join me for our first official date as boyfriend and girlfriend to see Bruno Mars on Wednesday, May 20th?";
+        const string4H1 = "YAY! ❤️🎉";
+        const string4P = "It's official!<br>I can't wait for our first date at the <br><span class='highlight'>Bruno Mars concert!</span>";
 
-        // Typewriter function
         function typeWriter(elementId, htmlString, speed, callback) {
             const element = document.getElementById(elementId);
             element.innerHTML = "";
-            element.classList.add("typing-cursor"); // Adds the blinking cursor
+            element.classList.add("typing-cursor"); 
             let i = 0;
             let currentHTML = "";
 
             function type() {
                 if (i < htmlString.length) {
-                    // This block ensures HTML tags (like <br> or <span>) type out instantly as one piece
                     if (htmlString.charAt(i) === '<') {
                         let tag = "";
                         while (htmlString.charAt(i) !== '>' && i < htmlString.length) {
@@ -179,28 +216,26 @@
                     }
                     element.innerHTML = currentHTML;
                     
-                    // Add slight random delay to make it look like a human is typing
                     let randomSpeed = speed + (Math.random() * 20 - 10);
                     setTimeout(type, randomSpeed);
                 } else {
-                    element.classList.remove("typing-cursor"); // Remove cursor when done
+                    element.classList.remove("typing-cursor"); 
                     if (callback) callback();
                 }
             }
             type();
         }
 
-        // Start typing Step 1 as soon as the page loads
         window.onload = function() {
             typeWriter("text-step-1", string1, 60, function() {
-                // Fade in the buttons after text finishes
                 document.getElementById("btns-1").classList.add("show-buttons");
             });
         };
 
+        // State trackers for the No buttons on step 1 and step 3
         let state = {
             1: { noClickCount: 0, yesFontSize: 1.2, yesPaddingV: 15, yesPaddingH: 30, noFontSize: 1.2, noPaddingV: 15, noPaddingH: 30 },
-            2: { noClickCount: 0, yesFontSize: 1.2, yesPaddingV: 15, yesPaddingH: 30, noFontSize: 1.2, noPaddingV: 15, noPaddingH: 30 }
+            3: { noClickCount: 0, yesFontSize: 1.2, yesPaddingV: 15, yesPaddingH: 30, noFontSize: 1.2, noPaddingV: 15, noPaddingH: 30 }
         };
 
         const messages = ["Are you sure?", "Really sure?", "Think again!"];
@@ -251,18 +286,24 @@
                 document.getElementById('step1-container').style.display = 'none';
                 document.getElementById('step2-container').style.display = 'flex';
                 
-                // Type out the second question, then show buttons
-                typeWriter("text-step-2", string2, 50, function() {
+                typeWriter("text-step-2", string2, 40, function() {
                     document.getElementById("btns-2").classList.add("show-buttons");
                 });
 
             } else if (step === 2) {
                 document.getElementById('step2-container').style.display = 'none';
+                document.getElementById('step3-container').style.display = 'flex';
+                
+                typeWriter("text-step-3", string3, 50, function() {
+                    document.getElementById("btns-3").classList.add("show-buttons");
+                });
+
+            } else if (step === 3) {
+                document.getElementById('step3-container').style.display = 'none';
                 document.getElementById('success-container').style.display = 'flex';
                 
-                // Type out the final H1, then type the paragraph, then shoot confetti!
-                typeWriter("text-step-3-h1", string3H1, 70, function() {
-                    typeWriter("text-step-3-p", string3P, 40, function() {
+                typeWriter("text-step-4-h1", string4H1, 70, function() {
+                    typeWriter("text-step-4-p", string4P, 40, function() {
                         fireConfetti();
                     });
                 });
