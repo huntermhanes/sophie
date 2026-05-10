@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,7 +17,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+            background: linear-gradient(135deg, #e0f2f1, #c8e6c9); /* Forest green gradient */
             font-family: 'Nunito', sans-serif;
             text-align: center;
             overflow: hidden; /* Prevents scrolling when the button gets huge */
@@ -33,7 +33,7 @@
         }
 
         h1 {
-            color: #d81b60;
+            color: #1b5e20; /* Dark forest green header */
             margin-bottom: 30px;
             font-size: 2rem;
             line-height: 1.4;
@@ -58,15 +58,15 @@
         }
 
         .yes-btn {
-            background-color: #e91e63;
+            background-color: #2e7d32; /* Strong forest green for YES */
             color: white;
             font-size: 1.2rem;
             padding: 15px 30px;
-            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4); /* Green shadow */
         }
 
         .yes-btn:hover {
-            background-color: #c2185b;
+            background-color: #1b5e20; /* Darker green on hover */
         }
 
         .no-btn {
@@ -83,7 +83,7 @@
         }
 
         .highlight {
-            color: #d81b60;
+            color: #1b5e20; /* Dark forest green highlight */
             font-weight: 800;
             font-size: 1.8rem;
         }
@@ -138,7 +138,7 @@
             if (s.noClickCount >= 3) {
                 // Change the No button into a Yes button
                 noBtn.innerText = "Yes";
-                noBtn.className = "yes-btn"; // Applies all the pink styling
+                noBtn.className = "yes-btn"; // Applies all the green styling
                 noBtn.onclick = function() { handleYes(step); };
                 
                 // Match the size of the giant Yes button
@@ -200,13 +200,13 @@
                 confetti(Object.assign({}, defaults, { 
                     particleCount, 
                     origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-                    colors: ['#ff0000', '#ff69b4', '#ffffff', '#e91e63']
+                    colors: ['#1b5e20', '#ffd700', '#ffffff', '#8bc34a'] /* Forest green, gold, white, light green */
                 }));
                 // Confetti from right
                 confetti(Object.assign({}, defaults, { 
                     particleCount, 
                     origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-                    colors: ['#ff0000', '#ff69b4', '#ffffff', '#e91e63']
+                    colors: ['#1b5e20', '#ffd700', '#ffffff', '#8bc34a'] /* Forest green, gold, white, light green */
                 }));
             }, 250);
         }
