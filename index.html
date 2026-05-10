@@ -24,6 +24,22 @@
             overflow: hidden; /* Prevents scrolling */
         }
 
+        /* The walking moose animation */
+        .moose {
+            position: fixed;
+            bottom: 20px;
+            font-size: 5rem;
+            z-index: 0; /* Keeps it behind the main white box */
+            animation: walkMoose 25s linear infinite;
+        }
+
+        @keyframes walkMoose {
+            0% { left: -15%; transform: scaleX(1); }
+            49% { left: 115%; transform: scaleX(1); }
+            50% { left: 115%; transform: scaleX(-1); } /* Flips the moose around */
+            100% { left: -15%; transform: scaleX(-1); } /* Walks back */
+        }
+
         /* Floating Background Emojis */
         .floating-emoji {
             position: fixed;
@@ -150,10 +166,13 @@
 </head>
 <body>
 
+    <!-- The Background Moose -->
+    <div class="moose">🫎</div>
+
     <!-- Floating Background Emojis -->
     <div class="floating-emoji e1">🌲</div>
     <div class="floating-emoji e2">🫎</div>
-    <div class="floating-emoji e3">🎵</div>
+    <div class="floating-emoji e3">❤️</div>
     <div class="floating-emoji e4">🐶</div>
     <div class="floating-emoji e5">🌲</div>
     <div class="floating-emoji e6">🏋️‍♂️</div>
@@ -164,8 +183,8 @@
     <div class="container" id="step1-container">
         <h1 id="text-step-1"></h1>
         <div class="buttons-wrapper" id="btns-1">
-            <button id="yes-btn-1" class="yes-btn" onclick="handleYes(1)">Yes</button>
-            <button id="no-btn-1" class="no-btn" onmouseover="moveButton(this)" ontouchstart="moveButton(this)" onclick="handleNo(1)">No</button>
+            <button id="yes-btn-1" class="yes-btn" onclick="handleYes()">Yes</button>
+            <button id="no-btn-1" class="no-btn" onmouseover="moveButton(this)" ontouchstart="moveButton(this)" onclick="handleNo()">No</button>
         </div>
     </div>
 
@@ -177,28 +196,18 @@
         </div>
     </div>
 
-    <!-- Step 3: Concert Date Question -->
-    <div class="container" id="step3-container" style="display: none;">
-        <h1 id="text-step-3"></h1>
-        <div class="buttons-wrapper" id="btns-3">
-            <button id="yes-btn-3" class="yes-btn" onclick="handleYes(3)">Yes</button>
-            <button id="no-btn-3" class="no-btn" onmouseover="moveButton(this)" ontouchstart="moveButton(this)" onclick="handleNo(3)">No</button>
-        </div>
-    </div>
-
-    <!-- Step 4: Final Celebration View -->
+    <!-- Step 3: Final Celebration View -->
     <div class="container" id="success-container" style="display: none;">
-        <h1 id="text-step-4-h1"></h1>
-        <p class="success-text" id="text-step-4-p"></p>
+        <h1 id="text-step-success-h1"></h1>
+        <p class="success-text" id="text-step-success-p"></p>
     </div>
 
     <script>
         // The text strings we want to type out
         const string1 = "May I be your boyfriend?";
         const string2 = "Yippee.. here's to more bloody noses, endless energy drinks, and an official gym buddy! 💪";
-        const string3 = "Will you join me for our first official date as boyfriend and girlfriend to see Bruno Mars on Wednesday, May 20th?";
-        const string4H1 = "YAY! ❤️🎉";
-        const string4P = "It's official!<br>I can't wait for our first date at the <br><span class='highlight'>Bruno Mars concert!</span>";
+        const stringSuccessH1 = "YAY! ❤️🎉";
+        const stringSuccessP = "It's official!<br>I can't wait for our first real date as <br><span class='highlight'>boyfriend and girlfriend!</span>";
 
         // Typewriter function
         function typeWriter(elementId, htmlString, speed, callback) {
@@ -242,9 +251,15 @@
             });
         };
 
+        // State tracker for the "No" button logic
         let state = {
-            1: { noClickCount: 0, yesFontSize: 1.2, yesPaddingV: 15, yesPaddingH: 30, noFontSize: 1.2, noPaddingV: 15, noPaddingH: 30 },
-            3: { noClickCount: 0, yesFontSize: 1.2, yesPaddingV: 15, yesPaddingH: 30, noFontSize: 1.2, noPaddingV: 15, noPaddingH: 30 }
+            noClickCount: 0, 
+            yesFontSize: 1.2, 
+            yesPaddingV: 15, 
+            yesPaddingH: 30, 
+            noFontSize: 1.2, 
+            noPaddingV: 15, 
+            noPaddingH: 30 
         };
 
         const messages = ["Are you sure?", "Really sure?", "Think again!"];
@@ -259,64 +274,55 @@
             btn.style.top = randomY + 'px';
         }
 
-        function handleNo(step) {
-            let s = state[step];
-            s.noClickCount++;
+        function handleNo() {
+            state.noClickCount++;
 
-            const yesBtn = document.getElementById(`yes-btn-${step}`);
-            const noBtn = document.getElementById(`no-btn-${step}`);
+            const yesBtn = document.getElementById('yes-btn-1');
+            const noBtn = document.getElementById('no-btn-1');
 
-            if (s.noClickCount >= 3) {
+            if (state.noClickCount >= 3) {
                 noBtn.innerText = "Yes";
                 noBtn.className = "yes-btn"; 
                 noBtn.style.position = 'static';
                 noBtn.onmouseover = null;
                 noBtn.ontouchstart = null;
-                noBtn.onclick = function() { handleYes(step); };
+                noBtn.onclick = function() { handleYes(); };
                 noBtn.style.fontSize = yesBtn.style.fontSize;
                 noBtn.style.padding = yesBtn.style.padding;
             } else {
-                noBtn.innerText = messages[s.noClickCount - 1];
-                s.yesFontSize += 1.5;
-                s.yesPaddingV += 15;
-                s.yesPaddingH += 25;
-                yesBtn.style.fontSize = s.yesFontSize + 'rem';
-                yesBtn.style.padding = s.yesPaddingV + 'px ' + s.yesPaddingH + 'px';
-                s.noFontSize -= 0.2;
-                s.noPaddingV -= 3;
-                s.noPaddingH -= 5;
-                noBtn.style.fontSize = s.noFontSize + 'rem';
-                noBtn.style.padding = s.noPaddingV + 'px ' + s.noPaddingH + 'px';
+                noBtn.innerText = messages[state.noClickCount - 1];
+                state.yesFontSize += 1.5;
+                state.yesPaddingV += 15;
+                state.yesPaddingH += 25;
+                yesBtn.style.fontSize = state.yesFontSize + 'rem';
+                yesBtn.style.padding = state.yesPaddingV + 'px ' + state.yesPaddingH + 'px';
+                state.noFontSize -= 0.2;
+                state.noPaddingV -= 3;
+                state.noPaddingH -= 5;
+                noBtn.style.fontSize = state.noFontSize + 'rem';
+                noBtn.style.padding = state.noPaddingV + 'px ' + state.noPaddingH + 'px';
             }
         }
 
-        function handleYes(step) {
-            if (step === 1) {
-                document.getElementById('step1-container').style.display = 'none';
-                document.getElementById('step2-container').style.display = 'flex';
-                
-                typeWriter("text-step-2", string2, 50, function() {
-                    document.getElementById("btns-2").classList.add("show-buttons");
-                });
-
-            } else if (step === 3) { 
-                document.getElementById('step3-container').style.display = 'none';
-                document.getElementById('success-container').style.display = 'flex';
-                
-                typeWriter("text-step-4-h1", string4H1, 70, function() {
-                    typeWriter("text-step-4-p", string4P, 40, function() {
-                        fireConfetti();
-                    });
-                });
-            }
+        function handleYes() {
+            // Hide step 1, show step 2 (Gym buddy)
+            document.getElementById('step1-container').style.display = 'none';
+            document.getElementById('step2-container').style.display = 'flex';
+            
+            typeWriter("text-step-2", string2, 50, function() {
+                document.getElementById("btns-2").classList.add("show-buttons");
+            });
         }
 
         function handleYippee() {
+            // Hide step 2, show final success celebration
             document.getElementById('step2-container').style.display = 'none';
-            document.getElementById('step3-container').style.display = 'flex';
+            document.getElementById('success-container').style.display = 'flex';
             
-            typeWriter("text-step-3", string3, 50, function() {
-                document.getElementById("btns-3").classList.add("show-buttons");
+            typeWriter("text-step-success-h1", stringSuccessH1, 70, function() {
+                typeWriter("text-step-success-p", stringSuccessP, 40, function() {
+                    fireConfetti();
+                });
             });
         }
 
