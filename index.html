@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Special Question For You...</title>
+    <!-- Importing a cute font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <!-- Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
@@ -15,45 +17,45 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #e0f2f1, #c8e6c9); 
+            /* Deep, dark forest green gradient */
+            background: linear-gradient(135deg, #0f3014, #1b5e20, #2e7d32); 
             font-family: 'Nunito', sans-serif;
             text-align: center;
-            overflow: hidden; 
+            overflow: hidden; /* Prevents scrolling */
         }
 
-        /* The Animated Moose */
-        .moose-wrapper {
+        /* Floating Background Emojis */
+        .floating-emoji {
             position: fixed;
-            bottom: 8%;
-            left: -15%;
-            font-size: 6rem;
-            z-index: 1; /* Stays behind the white box */
-            pointer-events: none; /* So she can't click it */
-            animation: walkAcross 20s linear infinite;
+            bottom: -10%;
+            z-index: 0;
+            opacity: 0.3; /* Keeps them subtle in the background */
+            animation: floatUp linear infinite;
+            filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.5));
         }
 
-        .moose-inner {
-            display: inline-block;
-            animation: trot 0.4s infinite alternate ease-in-out;
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
         }
 
-        @keyframes walkAcross {
-            0% { left: -15%; transform: scaleX(-1); } /* Face right */
-            49.9% { left: 110%; transform: scaleX(-1); } /* Walk right */
-            50% { left: 110%; transform: scaleX(1); } /* Flip to face left */
-            100% { left: -15%; transform: scaleX(1); } /* Walk left */
-        }
-
-        @keyframes trot {
-            0% { transform: translateY(0) rotate(-5deg); }
-            100% { transform: translateY(-15px) rotate(5deg); }
-        }
+        /* Different timings, sizes, and positions for each emoji */
+        .e1 { left: 10%; animation-duration: 18s; animation-delay: 0s; font-size: 3rem; }
+        .e2 { left: 25%; animation-duration: 22s; animation-delay: 5s; font-size: 4rem; }
+        .e3 { left: 40%; animation-duration: 15s; animation-delay: 2s; font-size: 2.5rem; }
+        .e4 { left: 55%; animation-duration: 25s; animation-delay: 8s; font-size: 3.5rem; }
+        .e5 { left: 70%; animation-duration: 19s; animation-delay: 3s; font-size: 3rem; }
+        .e6 { left: 85%; animation-duration: 21s; animation-delay: 1s; font-size: 4.5rem; }
+        .e7 { left: 15%; animation-duration: 24s; animation-delay: 10s; font-size: 2.8rem; }
+        .e8 { left: 80%; animation-duration: 17s; animation-delay: 6s; font-size: 3.2rem; }
 
         .container {
             background: white;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4); /* Stronger shadow for the darker background */
             max-width: 90%;
             width: 500px;
             z-index: 10;
@@ -66,7 +68,7 @@
         }
 
         h1 {
-            color: #1b5e20; 
+            color: #1b5e20; /* Dark forest green header */
             margin-bottom: 30px;
             font-size: 2rem;
             line-height: 1.4;
@@ -134,6 +136,7 @@
             font-size: 1.8rem;
         }
 
+        /* Typewriter Blinking Cursor Effect */
         .typing-cursor::after {
             content: '|';
             color: #1b5e20;
@@ -147,10 +150,15 @@
 </head>
 <body>
 
-    <!-- The Walking Moose -->
-    <div class="moose-wrapper">
-        <div class="moose-inner">🫎</div>
-    </div>
+    <!-- Floating Background Emojis -->
+    <div class="floating-emoji e1">🌲</div>
+    <div class="floating-emoji e2">🫎</div>
+    <div class="floating-emoji e3">🎵</div>
+    <div class="floating-emoji e4">🐶</div>
+    <div class="floating-emoji e5">🌲</div>
+    <div class="floating-emoji e6">🏋️‍♂️</div>
+    <div class="floating-emoji e7">✨</div>
+    <div class="floating-emoji e8">🫎</div>
 
     <!-- Step 1: Boyfriend Question -->
     <div class="container" id="step1-container">
@@ -161,11 +169,11 @@
         </div>
     </div>
 
-    <!-- Step 2: The Gym Buddy / Yippee Screen -->
+    <!-- Step 2: The Gym Buddy Intermediate Screen -->
     <div class="container" id="step2-container" style="display: none;">
         <h1 id="text-step-2"></h1>
         <div class="buttons-wrapper" id="btns-2">
-            <button id="yippee-btn" class="yes-btn" onclick="handleYes(2)">yippee</button>
+            <button class="yes-btn" onclick="handleYippee()">Yippee!</button>
         </div>
     </div>
 
@@ -178,20 +186,21 @@
         </div>
     </div>
 
-    <!-- Step 4: Celebration View -->
+    <!-- Step 4: Final Celebration View -->
     <div class="container" id="success-container" style="display: none;">
         <h1 id="text-step-4-h1"></h1>
         <p class="success-text" id="text-step-4-p"></p>
     </div>
 
     <script>
-        // The text strings
+        // The text strings we want to type out
         const string1 = "May I be your boyfriend?";
-        const string2 = "Yippee..heres to more bloody noses, endless energy drinks, and an official gym buddy";
+        const string2 = "Yippee.. here's to more bloody noses, endless energy drinks, and an official gym buddy! 💪";
         const string3 = "Will you join me for our first official date as boyfriend and girlfriend to see Bruno Mars on Wednesday, May 20th?";
         const string4H1 = "YAY! ❤️🎉";
         const string4P = "It's official!<br>I can't wait for our first date at the <br><span class='highlight'>Bruno Mars concert!</span>";
 
+        // Typewriter function
         function typeWriter(elementId, htmlString, speed, callback) {
             const element = document.getElementById(elementId);
             element.innerHTML = "";
@@ -226,13 +235,13 @@
             type();
         }
 
+        // Start typing Step 1 as soon as the page loads
         window.onload = function() {
             typeWriter("text-step-1", string1, 60, function() {
                 document.getElementById("btns-1").classList.add("show-buttons");
             });
         };
 
-        // State trackers for the No buttons on step 1 and step 3
         let state = {
             1: { noClickCount: 0, yesFontSize: 1.2, yesPaddingV: 15, yesPaddingH: 30, noFontSize: 1.2, noPaddingV: 15, noPaddingH: 30 },
             3: { noClickCount: 0, yesFontSize: 1.2, yesPaddingV: 15, yesPaddingH: 30, noFontSize: 1.2, noPaddingV: 15, noPaddingH: 30 }
@@ -286,19 +295,11 @@
                 document.getElementById('step1-container').style.display = 'none';
                 document.getElementById('step2-container').style.display = 'flex';
                 
-                typeWriter("text-step-2", string2, 40, function() {
+                typeWriter("text-step-2", string2, 50, function() {
                     document.getElementById("btns-2").classList.add("show-buttons");
                 });
 
-            } else if (step === 2) {
-                document.getElementById('step2-container').style.display = 'none';
-                document.getElementById('step3-container').style.display = 'flex';
-                
-                typeWriter("text-step-3", string3, 50, function() {
-                    document.getElementById("btns-3").classList.add("show-buttons");
-                });
-
-            } else if (step === 3) {
+            } else if (step === 3) { 
                 document.getElementById('step3-container').style.display = 'none';
                 document.getElementById('success-container').style.display = 'flex';
                 
@@ -308,6 +309,15 @@
                     });
                 });
             }
+        }
+
+        function handleYippee() {
+            document.getElementById('step2-container').style.display = 'none';
+            document.getElementById('step3-container').style.display = 'flex';
+            
+            typeWriter("text-step-3", string3, 50, function() {
+                document.getElementById("btns-3").classList.add("show-buttons");
+            });
         }
 
         function fireConfetti() {
