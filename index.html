@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -30,6 +30,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             max-width: 90%;
             z-index: 10;
+            position: relative;
         }
 
         h1 {
@@ -46,6 +47,7 @@
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
+            min-height: 60px; /* Keeps the container height stable if No button pops out */
         }
 
         button {
@@ -54,7 +56,7 @@
             cursor: pointer;
             font-family: 'Nunito', sans-serif;
             font-weight: 800;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease; /* Faster transition so it darts away quickly */
         }
 
         .yes-btn {
@@ -63,6 +65,7 @@
             font-size: 1.2rem;
             padding: 15px 30px;
             box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4); /* Green shadow */
+            z-index: 20;
         }
 
         .yes-btn:hover {
@@ -74,6 +77,7 @@
             color: white;
             font-size: 1.2rem;
             padding: 15px 30px;
+            z-index: 30; /* Keeps it above everything when it flies around */
         }
 
         .success-text {
@@ -96,7 +100,7 @@
         <h1>May I be your boyfriend?</h1>
         <div class="buttons-wrapper">
             <button id="yes-btn-1" class="yes-btn" onclick="handleYes(1)">Yes</button>
-            <button id="no-btn-1" class="no-btn" onclick="handleNo(1)">No</button>
+            <button id="no-btn-1" class="no-btn" onmouseover="moveButton(this)" ontouchstart="moveButton(this)" onclick="handleNo(1)">No</button>
         </div>
     </div>
 
@@ -105,7 +109,7 @@
         <h1>Will you join me for our first official date as boyfriend and girlfriend to see Bruno Mars on Wednesday, May 20th?</h1>
         <div class="buttons-wrapper">
             <button id="yes-btn-2" class="yes-btn" onclick="handleYes(2)">Yes</button>
-            <button id="no-btn-2" class="no-btn" onclick="handleNo(2)">No</button>
+            <button id="no-btn-2" class="no-btn" onmouseover="moveButton(this)" ontouchstart="moveButton(this)" onclick="handleNo(2)">No</button>
         </div>
     </div>
 
@@ -128,6 +132,24 @@
 
         const messages = ["Are you sure?", "Really sure?", "Think again!"];
 
+        // The function that makes the button run away
+        function moveButton(btn) {
+            // Change position so it can fly around the screen
+            btn.style.position = 'fixed';
+            
+            // Calculate random coordinates within the window boundaries
+            // Subtracting button size and padding so it doesn't go off-screen
+            const maxX = window.innerWidth - btn.offsetWidth - 20;
+            const maxY = window.innerHeight - btn.offsetHeight - 20;
+            
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+            
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+        }
+
+        // Keep the click logic just in case she manages to catch it!
         function handleNo(step) {
             let s = state[step];
             s.noClickCount++;
@@ -139,6 +161,11 @@
                 // Change the No button into a Yes button
                 noBtn.innerText = "Yes";
                 noBtn.className = "yes-btn"; // Applies all the green styling
+                
+                // Reset position so it snaps back next to the other Yes button
+                noBtn.style.position = 'static';
+                noBtn.onmouseover = null;
+                noBtn.ontouchstart = null;
                 noBtn.onclick = function() { handleYes(step); };
                 
                 // Match the size of the giant Yes button
